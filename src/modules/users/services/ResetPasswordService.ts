@@ -1,28 +1,29 @@
-// Typeorm
-import { getCustomRepository } from 'typeorm';
-import { UsersRepository } from '../typeorm/repositories/UsersRepository';
-import { UsersTokenRepository } from '../typeorm/repositories/UsersTokensRepository';
 // App
 import AppError from '@shared/errors/AppError';
+import { inject, injectable } from 'tsyringe';
+import { IResetPassword } from '../domain/models/IResetPassword';
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
+import { IUserTokensRepository } from '../domain/repositories/IUserTokensRepository';
 // Util's
 import { isAfter, addHours } from 'date-fns';
 import { hash } from 'bcryptjs';
 
-interface IRequest {
-  password: string;
-  token: string;
-}
-
+@injectable()
 class ResetPasswordService {
-  public async execute({ password, token }: IRequest): Promise<void> {
-    const usersRepository = getCustomRepository(UsersRepository);
-    const userTokenRepository = getCustomRepository(UsersTokenRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
 
-    const userToken = await userTokenRepository.findByToken(token);
+    @inject('UserTokensRepository')
+    private userTokensRepository: IUserTokensRepository,
+  ) {}
+
+  public async execute({ password, token }: IResetPassword): Promise<void> {
+    const userToken = await this.userTokensRepository.findByToken(token);
 
     if (!userToken) throw new AppError('User token does not exists.');
 
-    const user = await usersRepository.findById(userToken.user_id);
+    const user = await this.usersRepository.findById(userToken.user_id);
 
     if (!user) throw new AppError('User does not exists.');
 
@@ -33,7 +34,7 @@ class ResetPasswordService {
 
     user.password = await hash(password, 8);
 
-    await usersRepository.save(user);
+    await this.usersRepository.save(user);
   }
 }
 
