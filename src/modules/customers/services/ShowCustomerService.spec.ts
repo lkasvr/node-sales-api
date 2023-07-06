@@ -10,7 +10,7 @@ let showCustomer: ShowCustomerService;
 let createCustomer: CreateCustomerService;
 let customer: ICustomer
 
-describe('ListCustomer', () => {
+describe('ShowCustomer', () => {
   beforeEach(async () => {
     fakeCustomerRepository = new FakeCustomersRepository();
     showCustomer = new ShowCustomerService(fakeCustomerRepository);
@@ -27,7 +27,7 @@ describe('ListCustomer', () => {
     expect(returnedCustomer.id).toEqual(customer.id);
   });
 
-  it(`should return an AppError instance for non-existent user `, () => {
+  it(`should return an AppError instance for non-existent customer `, () => {
     expect(showCustomer.execute({ id: '' })).rejects.toBeInstanceOf(AppError);
   });
 });

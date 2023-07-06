@@ -11,7 +11,7 @@ describe('ListCustomer', () => {
     listCustomer = new ListCustomerService(fakeCustomerRepository);
   });
 
-  it(`should list all user's with pagination`, async () => {
+  it(`should list all customer's with pagination`, async () => {
     const page = 2, limit = 2;
     const skip = (Number(page) - 1) * limit;
 
