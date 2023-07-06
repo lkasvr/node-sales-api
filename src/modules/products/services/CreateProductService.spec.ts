@@ -7,7 +7,7 @@ let fakeProductRepository: FakesProductRepository;
 let createProduct: CreateProductService;
 
 describe('CreateProduct', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     fakeProductRepository = new FakesProductRepository();
     createProduct = new CreateProductService(fakeProductRepository);
   });
@@ -20,5 +20,19 @@ describe('CreateProduct', () => {
     });
 
     expect(product).toHaveProperty('id');
+  });
+
+  it('Should not create a new product with duplicate name', async () => {
+    await createProduct.execute({
+      name: 'Produto 1',
+      price: 10.5,
+      quantity: 15
+    });
+
+    expect(createProduct.execute({
+      name: 'Produto 1',
+      price: 10.5,
+      quantity: 15
+    })).rejects.toBeInstanceOf(AppError);
   });
 });

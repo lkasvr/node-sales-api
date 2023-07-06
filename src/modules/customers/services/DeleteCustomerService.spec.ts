@@ -13,7 +13,6 @@ let customer: ICustomer
 describe('DeleteCustomer', () => {
   beforeEach(() => {
     fakeCustomerRepository = new FakeCustomersRepository();
-
     deleteCustomer = new DeleteCustomerService(fakeCustomerRepository);
     createCustomer = new CreateCustomerService(fakeCustomerRepository);
   });
