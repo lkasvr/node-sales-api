@@ -1,13 +1,9 @@
 import 'reflect-metadata';
 import ListCustomerService from './ListCustomerService';
-import CreateCustomerService from './CreateCustomerService';
 import FakeCustomersRepository from '../domain/repositories/fakes/FakesCustomerRepository';
-import { ICustomer } from '../domain/models/ICustomer';
-import AppError from '@shared/errors/AppError';
 
 let fakeCustomerRepository: FakeCustomersRepository;
 let listCustomer: ListCustomerService;
-let customer: ICustomer
 
 describe('ListCustomer', () => {
   beforeEach(async () => {
@@ -15,7 +11,7 @@ describe('ListCustomer', () => {
     listCustomer = new ListCustomerService(fakeCustomerRepository);
   });
 
-  it(`should list all user's`, async () => {
+  it(`should list all user's with pagination`, async () => {
     const page = 2, limit = 2;
     const skip = (Number(page) - 1) * limit;
 
@@ -27,6 +23,8 @@ describe('ListCustomer', () => {
       data: [
         ...customers.data
       ],
-    })
+    });
+
+    expect(customers.data).toHaveLength(page);
   });
 });

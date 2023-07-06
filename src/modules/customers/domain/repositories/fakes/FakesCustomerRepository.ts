@@ -17,15 +17,20 @@ const getCustomer = (args: Array<string>) => ({
   updated_at: new Date(),
 });
 // [page, skip, take]
-const getCustomerPaginate = (args: Array<number>) => ({
-  per_page: args[0] ?? 1,
-  total: args[1] ?? 1,
-  current_page: args[2] ?? 1,
-  data: [
-    getCustomer(['Carlos', 'carlos@.com']),
-    getCustomer(['Lucas', 'lucas@.com']),
-  ],
-});
+const getCustomerPaginate = (args: Array<number>) => {
+  const data = [];
+
+  if (args[0] && args[0] > 1) {
+    for (let i = 0; i < args[0]; i++) data.push(getCustomer([`Lucas ${i}`, `lucas${i}@.com`]));
+  } else { data.push(getCustomer(['Carlos', 'carlos@.com'])); };
+
+  return ({
+    per_page: args[0] ?? 1,
+    total: args[1] ?? 1,
+    current_page: args[2] ?? 1,
+    data,
+  });
+};
 
 class FakeCustomersRepository implements ICustomersRepository {
   private customers: Customer[] = [];
