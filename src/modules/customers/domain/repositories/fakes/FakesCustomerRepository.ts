@@ -7,7 +7,6 @@ import {
 import { ICreateCustomer } from '@modules/customers/domain/models/ICreateCustomer';
 import { IDeleteCustomer } from '@modules/customers/domain/models/IDeleteCustomer';
 import { ICustomerPaginate } from '@modules/customers/domain/models/ICustomerPaginate';
-import { ICustomer } from '../../models/ICustomer';
 
 const getCustomer = (args: Array<string>) => ({
   id: uuidv4(),
