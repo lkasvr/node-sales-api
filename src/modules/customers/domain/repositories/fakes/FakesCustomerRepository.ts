@@ -16,11 +16,11 @@ const getCustomer = (args: Array<string>) => ({
   created_at: new Date(),
   updated_at: new Date(),
 });
-
+// [page, skip, take]
 const getCustomerPaginate = (args: Array<number>) => ({
-  per_page: args[0] && 1,
-  total: args[1] && 1,
-  current_page: args[2] && 1,
+  per_page: args[0] ?? 1,
+  total: args[1] ?? 1,
+  current_page: args[2] ?? 1,
   data: [
     getCustomer(['Carlos', 'carlos@.com']),
     getCustomer(['Lucas', 'lucas@.com']),

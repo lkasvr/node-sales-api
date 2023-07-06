@@ -1,36 +1,32 @@
 import 'reflect-metadata';
+import ListCustomerService from './ListCustomerService';
 import CreateCustomerService from './CreateCustomerService';
 import FakeCustomersRepository from '../domain/repositories/fakes/FakesCustomerRepository';
+import { ICustomer } from '../domain/models/ICustomer';
 import AppError from '@shared/errors/AppError';
 
 let fakeCustomerRepository: FakeCustomersRepository;
-let createCustomer: CreateCustomerService;
+let listCustomer: ListCustomerService;
+let customer: ICustomer
 
 describe('ListCustomer', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     fakeCustomerRepository = new FakeCustomersRepository();
-    createCustomer = new CreateCustomerService(fakeCustomerRepository);
+    listCustomer = new ListCustomerService(fakeCustomerRepository);
   });
 
-  it('Should be able to create a new customer', async () => {
-    const customer = await createCustomer.execute({
-      name: 'Marcos Vieira',
-      email: 'marcimo@hotmail123.com',
-    });
+  it(`should list all user's`, async () => {
+    const page = 2, limit = 2;
+    const skip = (Number(page) - 1) * limit;
 
-    expect(customer).toHaveProperty('id');
-  });
-
-  it('Should not be able to create a customer with the same email address', async () => {
-    await createCustomer.execute({
-      name: 'Marcos Vieira',
-      email: 'marcimo@hotmail123.com',
-    });
-    expect(
-      createCustomer.execute({
-        name: 'Marcos Vieira',
-        email: 'marcimo@hotmail123.com',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
+    const customers = await listCustomer.execute({ page, limit });
+    expect(customers).toMatchObject({
+      per_page: page,
+      total: skip,
+      current_page: limit,
+      data: [
+        ...customers.data
+      ],
+    })
   });
 });
