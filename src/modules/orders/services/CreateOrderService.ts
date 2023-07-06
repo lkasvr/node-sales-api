@@ -4,6 +4,10 @@ import AppError from '@shared/errors/AppError';
 import { IOrder } from '../domain/models/IOrder';
 import { IRequestCreateOrder } from '../domain/models/IRequestCreateOrder';
 
+import { IOrdersRepository } from '@modules/orders/domain/repositories/IOrdersRepository';
+import { ICustomersRepository } from '@modules/customers/domain/repositories/ICustomersRepository';
+import { IProductsRepository } from '@modules/products/domain/repositories/IProductsRepository';
+
 @injectable()
 class CreateOrderService {
   constructor(
@@ -13,7 +17,7 @@ class CreateOrderService {
     private customersRepository: ICustomersRepository,
     @inject('ProductsRepository')
     private productsRepository: IProductsRepository,
-  ) {}
+  ) { }
 
   public async execute({
     customer_id,
@@ -70,7 +74,7 @@ class CreateOrderService {
         product.quantity,
     }));
 
-    await this.productsRepository.save(updatedProductQuantity);
+    await this.productsRepository.updateStock(updatedProductQuantity);
 
     return order;
   }
