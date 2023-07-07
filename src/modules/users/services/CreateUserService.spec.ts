@@ -5,8 +5,8 @@ import AppError from '@shared/errors/AppError';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 
 let fakeUserRepository: FakeUsersRepository;
-let createUser: CreateUserService;
 let fakeHashProvider: FakeHashProvider;
+let createUser: CreateUserService;
 
 describe('CreateUser', () => {
   beforeEach(() => {

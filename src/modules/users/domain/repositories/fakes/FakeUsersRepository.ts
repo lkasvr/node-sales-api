@@ -28,9 +28,19 @@ class FakeUsersRepository implements IUsersRepository {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public async remove(user: User): Promise<void> {}
+  public async remove(user: User): Promise<void> { }
 
   public async findAll(): Promise<User[]> {
+    let i = 1;
+    while (i <= 10) {
+      this.create({
+        name: `Marcos Vieira ${i}`,
+        email: `marcimo${i}@hotmail.com`,
+        password: `123456-${i}`,
+      });
+      i++;
+    }
+
     return this.users;
   }
 
