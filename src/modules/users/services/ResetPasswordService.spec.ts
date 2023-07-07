@@ -7,25 +7,26 @@ import FakeUserTokensRepository from '@modules/users/domain/repositories/fakes/F
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import { IUser } from '../domain/models/IUser';
 import AppError from '@shared/errors/AppError';
-
-import mail from '@config/mail/mail'
+// Util's
+import { compare } from 'bcryptjs';
 
 let fakeUserRepository: FakeUsersRepository;
 let fakeUserTokensRepository: FakeUserTokensRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUserService;
-let sendForgotPasswordEmail: SendForgotPasswordEmailService;
+let resetPassword: ResetPasswordService;
 
 let user: IUser;
+let password: string;
 
-describe('SendForgotPasswordEmail', () => {
+describe('ResetPassword', () => {
   beforeEach(async () => {
     fakeUserRepository = new FakeUsersRepository();
     fakeUserTokensRepository = new FakeUserTokensRepository();
     fakeHashProvider = new FakeHashProvider();
 
     createUser = new CreateUserService(fakeUserRepository, fakeHashProvider);
-    sendForgotPasswordEmail = new SendForgotPasswordEmailService(fakeUserRepository, fakeUserTokensRepository);
+    resetPassword = new ResetPasswordService(fakeUserRepository, fakeUserTokensRepository);
 
     user = await createUser.execute({
       name: 'Marcos Vieira',
@@ -34,20 +35,29 @@ describe('SendForgotPasswordEmail', () => {
     });
 
     expect(user).toHaveProperty('id');
+    password = '78910';
   });
 
-  it('should call a sendForgotPasswordEmail service', async () => {
-    expect(sendForgotPasswordEmail.execute({ email: user.email })).resolves.toBeCalledTimes(1);
-    expect(sendForgotPasswordEmail.execute({ email: user.email })).resolves.toBeCalledWith(user.email);
+  it('should reset user password', async () => {
+    const { token } = await fakeUserTokensRepository.generate(user.id);
+    await resetPassword.execute({ password, token });
+
+    const isResetPassword = await compare(password, user.password);
+
+    expect(isResetPassword).toBeTruthy();
   });
 
-  it('should call a sendForgotPasswordEmail service and test the conditional branch', async () => {
-    mail.driver = 'ses'
-    expect(sendForgotPasswordEmail.execute({ email: user.email })).resolves.toBeCalledTimes(1);
-    expect(sendForgotPasswordEmail.execute({ email: user.email })).resolves.toBeCalledWith(user.email);
+  it('should return an AppError instance for non-existent user token', async () => {
+    expect(resetPassword.execute({ password, token: '' })).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should return an instance of AppErro for non-existent user', async () => {
-    expect(sendForgotPasswordEmail.execute({ email: '' })).rejects.toBeInstanceOf(AppError);
+  it('should return an AppError instance for non-existent user', async () => {
+    const { token } = await fakeUserTokensRepository.generate('12345');
+
+    expect(resetPassword.execute({ password, token })).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should return an AppError instance for a expired token', async () => {
+    expect(resetPassword.execute({ password, token: '9876' })).rejects.toBeInstanceOf(AppError);
   });
 });

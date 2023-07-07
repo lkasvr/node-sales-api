@@ -4,7 +4,18 @@ import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepos
 import User from '@modules/users/infra/typeorm/entities/User';
 
 class FakeUsersRepository implements IUsersRepository {
-  private users: User[] = [];
+  private users: User[] = [
+    {
+      id: '5678',
+      avatar: '',
+      name: '',
+      email: '',
+      password: '',
+      created_at: new Date(),
+      updated_at: new Date(),
+      getAvatarUrl: () => null,
+    }
+  ];
 
   public async create({ name, email, password }: ICreateUser): Promise<User> {
     const user = new User();
