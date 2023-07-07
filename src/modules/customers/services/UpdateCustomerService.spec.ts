@@ -48,7 +48,7 @@ describe('UpdateCustomer', () => {
       name: 'Lucas Vieira',
       email: 'lkasvr@hotmail123.com',
     });
-    const name = 'Marcos';
+    const name = '';
 
     expect(updateCusomer.execute({ id: customer.id, name, email: anotherCustomer.email })).rejects.toBeInstanceOf(AppError);
   });
