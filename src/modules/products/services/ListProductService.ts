@@ -10,7 +10,7 @@ class ListProductService {
   constructor(
     @inject('ProductsRepository')
     private productsRepository: IProductsRepository,
-  ) {}
+  ) { }
 
   public async execute(): Promise<IProduct[]> {
     let products = await redisCache.recover<IProduct[]>(

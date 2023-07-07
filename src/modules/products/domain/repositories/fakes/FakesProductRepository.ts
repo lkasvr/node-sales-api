@@ -5,14 +5,15 @@ import { ICreateProduct } from '../../models/ICreateProduct';
 import { IUpdateStockProduct } from '../../models/IUpdateStockProduct';
 import { IFindProducts } from '../../models/IFindProducts';
 
-// const getProduct = (args: Array<string>) => ({
-//   id: uuidv4(),
-//   name: args[0],
-//   price: args[1],
-//   quantity: args[2],
-//   created_at: new Date(),
-//   updated_at: new Date(),
-// });
+const getProduct = (args: [string, number, number]) => ({
+  id: uuidv4(),
+  name: args[0],
+  price: args[1],
+  quantity: args[2],
+  order_products: [],
+  created_at: new Date(),
+  updated_at: new Date(),
+});
 
 class FakeProductRepository implements IProductsRepository {
   private products: Product[] = [];
@@ -69,7 +70,13 @@ class FakeProductRepository implements IProductsRepository {
   }
 
   public async findAll(): Promise<Product[]> {
-    return { ...this.products };
+    let i = 1;
+    while (i <= 10) {
+      this.products.push({ ...getProduct([`Product ${i}`, 12.5 + i, 1 + i]) });
+      i++;
+    }
+
+    return [...this.products];
   }
 
   public async findAllByIds(products: IFindProducts[]): Promise<Product[]> {

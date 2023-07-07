@@ -22,7 +22,7 @@ describe('ShowCustomer', () => {
     });
   });
 
-  it(`should return a specific user identified by id `, async () => {
+  it(`should return a specific user identified by id`, async () => {
     const returnedCustomer = await showCustomer.execute({ id: customer.id })
     expect(returnedCustomer.id).toEqual(customer.id);
   });
