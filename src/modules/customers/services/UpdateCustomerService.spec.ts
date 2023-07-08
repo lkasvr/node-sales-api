@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import CreateCustomerService from './CreateCustomerService';
-import ShowCustomerService from './ShowCustomerService';
 import UpdateCustomerService from './UpdateCustomerService';
 import FakeCustomersRepository from '../domain/repositories/fakes/FakesCustomerRepository';
 import AppError from '@shared/errors/AppError';
@@ -8,7 +7,6 @@ import { ICustomer } from '../domain/models/ICustomer';
 
 let fakeCustomerRepository: FakeCustomersRepository;
 let updateCusomer: UpdateCustomerService;
-let showCustomer: ShowCustomerService;
 let createCustomer: CreateCustomerService;
 let customer: ICustomer
 
@@ -16,7 +14,6 @@ describe('UpdateCustomer', () => {
   beforeEach(async () => {
     fakeCustomerRepository = new FakeCustomersRepository();
     updateCusomer = new UpdateCustomerService(fakeCustomerRepository);
-    showCustomer = new ShowCustomerService(fakeCustomerRepository);
     createCustomer = new CreateCustomerService(fakeCustomerRepository);
 
     customer = await createCustomer.execute({
