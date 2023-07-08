@@ -7,10 +7,10 @@ class FakeUsersRepository implements IUsersRepository {
   private users: User[] = [
     {
       id: '5678',
-      avatar: '',
-      name: '',
-      email: '',
-      password: '',
+      avatar: 'x',
+      name: 'x',
+      email: 'x@email.com',
+      password: 'xxx',
       created_at: new Date(),
       updated_at: new Date(),
       getAvatarUrl: () => null,

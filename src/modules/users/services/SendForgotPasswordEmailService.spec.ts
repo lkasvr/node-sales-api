@@ -1,13 +1,14 @@
 import 'reflect-metadata';
+
 import CreateUserService from './CreateUserService';
 import SendForgotPasswordEmailService from './SendForgotPasswordEmailService';
-import ResetPasswordService from './ResetPasswordService';
 import FakeUsersRepository from '@modules/users/domain/repositories/fakes/FakeUsersRepository';
 import FakeUserTokensRepository from '@modules/users/domain/repositories/fakes/FakeUserTokensRepository';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import { IUser } from '../domain/models/IUser';
 import AppError from '@shared/errors/AppError';
 
+jest.useFakeTimers();
 import mail from '@config/mail/mail'
 
 let fakeUserRepository: FakeUsersRepository;
