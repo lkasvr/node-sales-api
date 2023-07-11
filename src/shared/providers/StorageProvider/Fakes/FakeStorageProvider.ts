@@ -1,4 +1,4 @@
-export default class FakeDiskStorageProvider {
+export default class FakeStorageProvider {
   private file: string;
 
   public async saveFile(file: string): Promise<string> {

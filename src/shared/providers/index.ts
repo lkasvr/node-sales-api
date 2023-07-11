@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import DiskStorageProvider from './StorageProvider/implementations/DiskStorageProvider';
 import S3StorageProvider from './StorageProvider/implementations/S3StorageProvider';
-import { IDiskStorageProvider, IS3StorageProvider } from './StorageProvider/models/IStorageProviders';
+import { IProvider } from './StorageProvider/models/IProviders';
 
-container.registerSingleton<IDiskStorageProvider>('StorageProvider', DiskStorageProvider);
-container.registerSingleton<IS3StorageProvider>('StorageProvider', S3StorageProvider);
+container.registerSingleton<IProvider>('DiskStorageProvider', DiskStorageProvider);
+container.registerSingleton<IProvider>('S3StorageProvider', S3StorageProvider);

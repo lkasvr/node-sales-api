@@ -13,6 +13,7 @@ import { IUserTokensRepository } from '@modules/users/domain/repositories/IUserT
 
 // Services Provider's
 import '@modules/users/providers';
+import '@shared/providers';
 // ***
 
 container.registerSingleton<ICustomersRepository>(

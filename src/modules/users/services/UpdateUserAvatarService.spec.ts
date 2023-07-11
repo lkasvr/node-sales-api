@@ -3,14 +3,13 @@ import CreateUserService from './CreateUserService';
 import UpdateUserAvatarService from './UpdateUserAvatarService';
 import FakeUsersRepository from '../domain/repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
+import FakeStorageProvider from '@shared/providers/StorageProvider/Fakes/FakeStorageProvider';
 import AppError from '@shared/errors/AppError';
 import { IUser } from '../domain/models/IUser';
 
-jest.useFakeTimers();
-import upload from '@config/upload'
-
 let fakeUserRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
+let fakeStorageProvider: FakeStorageProvider;
 let createUser: CreateUserService;
 let updateUserAvatar: UpdateUserAvatarService;
 let user: IUser
@@ -19,7 +18,8 @@ describe('UpdateCustomer', () => {
   beforeEach(async () => {
     fakeUserRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
-    updateUserAvatar = new UpdateUserAvatarService(fakeUserRepository);
+    fakeStorageProvider = new FakeStorageProvider();
+    updateUserAvatar = new UpdateUserAvatarService(fakeUserRepository, fakeStorageProvider, fakeStorageProvider);
     createUser = new CreateUserService(fakeUserRepository, fakeHashProvider);
 
     user = await createUser.execute({
