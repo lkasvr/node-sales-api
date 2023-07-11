@@ -8,7 +8,8 @@ import FakeUserTokensRepository from '@modules/users/domain/repositories/fakes/F
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import { IUser } from '../domain/models/IUser';
 import AppError from '@shared/errors/AppError';
-import mail from '@config/mail/mail'
+import mail from '@config/mail/mail';
+
 let fakeUserRepository: FakeUsersRepository;
 let fakeUserTokensRepository: FakeUserTokensRepository;
 let fakeHashProvider: FakeHashProvider;
