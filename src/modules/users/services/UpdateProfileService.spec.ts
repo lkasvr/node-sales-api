@@ -12,7 +12,7 @@ let createUser: CreateUserService;
 let updateProfile: UpdateProfileService;
 let user: IUser
 
-describe('UpdateCustomer', () => {
+describe('UpdateProfile', () => {
   beforeEach(async () => {
     fakeUserRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
@@ -61,9 +61,9 @@ describe('UpdateCustomer', () => {
     expect(updateProfile.execute({ user_id: user.id, name, email, password, old_password: '' })).rejects.toBeInstanceOf(AppError);
   });
 
-  it(`should return an AppError instance if not provide an old password to change the password`, async () => {
+  it(`Cover isTheSamePassword branch`, async () => {
     const name = 'Marcos', email = 'marcio456@outlook.com', password = '123456';
 
-    expect(updateProfile.execute({ user_id: user.id, name, email, password, old_password: '123456' })).rejects.toBeInstanceOf(AppError);
+    expect(updateProfile.execute({ user_id: user.id, name, email, password, old_password: password })).rejects.toBeInstanceOf(AppError);
   });
 });
