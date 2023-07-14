@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import ShowOrderService from './ShowOrderService';
 import CreateOrderService from './CreateOrderService';
 import CreateCustomerService from '@modules/customers/services/CreateCustomerService';
 import CreateProductService from '@modules/products/services/CreateProductService';
@@ -8,22 +9,26 @@ import FakeProductRepository from '@modules/products/domain/repositories/fakes/F
 import AppError from '@shared/errors/AppError';
 import { ICustomer } from '@modules/customers/domain/models/ICustomer';
 import { IProduct } from '@modules/products/domain/models/IProduct';
+import { IOrder } from '../domain/models/IOrder';
 
 let fakeOrdersRepository: FakeOrdersRepository;
 let fakesCustomerRepository: FakesCustomerRepository;
-let fakesProductRepository: FakeProductRepository
+let fakesProductRepository: FakeProductRepository;
+let showOrder: ShowOrderService;
 let createOrder: CreateOrderService;
 let createCustomer: CreateCustomerService;
 let createProduct: CreateProductService;
 let customer: ICustomer;
 let product: IProduct;
+let order: IOrder;
 
-describe('CreateOrder', () => {
+describe('ShowOrder', () => {
   beforeEach(async () => {
     fakeOrdersRepository = new FakeOrdersRepository();
     fakesCustomerRepository = new FakesCustomerRepository();
     fakesProductRepository = new FakeProductRepository();
 
+    showOrder = new ShowOrderService(fakeOrdersRepository);
     createOrder = new CreateOrderService(fakeOrdersRepository, fakesCustomerRepository, fakesProductRepository);
     createCustomer = new CreateCustomerService(fakesCustomerRepository);
     createProduct = new CreateProductService(fakesProductRepository);
@@ -34,40 +39,17 @@ describe('CreateOrder', () => {
     });
 
     product = await createProduct.execute({ name: 'Test Product', price: 10, quantity: 5 });
+    order = await createOrder.execute({ customer_id: customer.id, products: [product] });
 
   });
 
-  it('Should be able to create a new order', async () => {
-    const otherProduct = await createProduct.execute({ name: 'Test Product 2', price: 2, quantity: 20 });
-
-    const order = await createOrder.execute({ customer_id: customer.id, products: [product, otherProduct] });
-
-    expect(order).toHaveProperty('id');
+  it('Should be able to show order', async () => {
+    const theOrder = await showOrder.execute({ id: order.id });
+    expect(theOrder).toMatchObject(order);
   });
 
-  it('Should not be able to create a new order without products', () => {
-    expect(createOrder.execute({ customer_id: customer.id, products: [] })).rejects.toBeInstanceOf(AppError);
+  it('Should be able to show an AppError instance for non-existent order', () => {
+    expect(showOrder.execute({ id: '' })).rejects.toBeInstanceOf(AppError);
   });
 
-  it('check conditional statement checkNonexistentProducts', () => {
-    expect(
-      createOrder.execute({ customer_id: customer.id, products: [product, { id: '098xas#*123sdad' }] })
-    )
-      .rejects
-      .toBeInstanceOf(AppError);
-  });
-
-  it('Should not be able to create a new order without enough quantity product', async () => {
-    const otherProduct = await createProduct.execute({ name: 'Test Product 2', price: 2, quantity: 2 });
-
-    expect(
-      createOrder.execute({ customer_id: customer.id, products: [product, { ...otherProduct, quantity: 5 }] })
-    )
-      .rejects
-      .toBeInstanceOf(AppError);
-  });
-
-  it('Should not be able to create a new order by non-existent user', () => {
-    expect(createOrder.execute({ customer_id: '', products: [] })).rejects.toBeInstanceOf(AppError);
-  });
 });
