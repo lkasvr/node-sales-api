@@ -8,7 +8,7 @@ import {
   Column,
 } from 'typeorm';
 import Order from './Order';
-import Product from '../../../../products/infra/typeorm/entities/Product';
+import Product from '@modules/products/infra/typeorm/entities/Product';
 
 @Entity('orders_products')
 export default class OrdersProducts {

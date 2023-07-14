@@ -25,6 +25,8 @@ class FakeProductRepository implements IProductsRepository {
     product.name = name;
     product.price = price;
     product.quantity = quantity;
+    product.created_at = new Date();
+    product.updated_at = new Date();
 
     this.products.push(product);
 
@@ -86,6 +88,8 @@ class FakeProductRepository implements IProductsRepository {
       const findIndex = this.products.findIndex(
         findProduct => findProduct.id === id,
       );
+
+      if (findIndex === -1) return { id: '', name: '', price: 0, quantity: 0, order_products: [], created_at: new Date(), updated_at: new Date() };
 
       return this.products[findIndex];
     });

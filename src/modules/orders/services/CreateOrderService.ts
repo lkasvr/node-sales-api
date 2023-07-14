@@ -35,19 +35,21 @@ class CreateOrderService {
 
     const existsProductsIds = existsProducts.map(product => product.id);
 
-    const checkNonexistentProducts = products.filter(
+    const checkNoneExistentProducts = products.filter(
       product => !existsProductsIds.includes(product.id),
     );
 
-    if (checkNonexistentProducts.length)
+    if (checkNoneExistentProducts.length)
       throw new AppError(
-        `Couldn't find product ${checkNonexistentProducts[0].id}`,
+        `Couldn't find product ${checkNoneExistentProducts[0].id}`,
       );
 
     const quantityAvailable = products.filter(
-      product =>
-        existsProducts.filter(p => p.id === product.id)[0].quantity <
-        product.quantity,
+      product => {
+        const quantity = existsProducts.filter(p => p.id === product.id)[0].quantity;
+
+        return (quantity < product.quantity || quantity === 0);
+      }
     );
     if (quantityAvailable.length)
       throw new AppError(
