@@ -58,10 +58,10 @@ describe('CreateOrder', () => {
   });
 
   it('Should not be able to create a new order without quantity product', async () => {
-    const otherProduct = await createProduct.execute({ name: 'Test Product 2', price: 2, quantity: 0 });
+    const otherProduct = await createProduct.execute({ name: 'Test Product 2', price: 2, quantity: 2 });
 
     expect(
-      createOrder.execute({ customer_id: customer.id, products: [product, otherProduct] })
+      createOrder.execute({ customer_id: customer.id, products: [product, { ...otherProduct, quantity: 5 }] })
     )
       .rejects
       .toBeInstanceOf(AppError);
